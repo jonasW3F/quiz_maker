@@ -50,9 +50,20 @@ def create_exam(folder_path, file_name, version):
             exam_questions += randomized_content + '\n\n'
     
     exam_content = f"""\\documentclass{{article}}
+\\usepackage{{enumitem}}
+\\usepackage{{xifthen}}
+\\usepackage{{xcolor}}
+
+\\newlist{{answers}}{{enumerate}}{{1}}
+\\setlist[answers]{{label=\\alph*.)}}
+
+\\newcommand{{\\answer}}[2][]{{%
+    \\ifthenelse{{\\equal{{#1}}{{correct}}}}
+        {{\\item \\textbf{{#2}} \\textcolor{{red}}{{(Correct)}}}} % Uncomment for instructor version
+        {{\\item #2}}%
+}}
+
 \\newcommand{{\\question}}[1]{{\\section*{{#1}}}}
-\\newenvironment{{answers}}{{\\begin{{enumerate}}}}{{\\end{{enumerate}}}}
-\\newcommand{{\\answer}}[2][]{{\\item #2}}
 
 \\title{{Module 2: Exam ({version})}}
 
