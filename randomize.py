@@ -31,9 +31,6 @@ def randomize_answers(question_content, question_number):
     
     return final_question_content
 
-
-
-
 def create_exam(folder_path, file_name, version):
     question_number = 1
 
@@ -49,6 +46,31 @@ def create_exam(folder_path, file_name, version):
             question_number += 1
             exam_questions += randomized_content + '\n\n'
     
+    exam_instructions = r"""
+    {\Large
+    \begin{center}
+    \textbf{Welcome!} Please follow these instructions closely:
+    \end{center}
+
+    \begin{enumerate}
+        \item \textbf{Exam Materials}: You should have received two sets of papers. The first set contains the exam questions (this one), and the second set is your answer sheet. If something is missing, let us know.
+        \item \textbf{Answering Questions}: Each question has three possible answers, but only one is correct. Record your selected answer on the answer sheet. Ensure that your markings are clear and legible to avoid any scoring errors.
+        \item \textbf{Filling Out the Answer Sheet}: Clearly fill in your name and the exam version (either A or B, as indicated on this sheet) at the top of the answer sheet.
+        \item \textbf{Scoring}:
+        \begin{itemize}
+            \item \textbf{Correct Answers}: Each correct answer earns you one point.
+            \item \textbf{Incorrect Answers}: Each incorrect answer results in a deduction of one point.
+            \item \textbf{Multiple Answers}: If you mark more than one answer per question, you will receive a deduction of one point.
+            \item \textbf{Unanswered Questions}: Leaving a question unanswered neither adds nor deducts points.
+        \end{itemize}
+    \end{enumerate}
+
+    \textbf{Important}: Avoid guessing! Given the deduction of points for incorrect answers, it's advisable to answer only if you are reasonably confident in your response.
+    \vfill
+    \textbf{NAME:} \underline{\hspace{10cm}} % Provides a space for the student to write their name
+    }
+    """
+
     exam_content = f"""\\documentclass{{article}}
 \\usepackage[margin=1in]{{geometry}}  % Adjust margin here
 \\usepackage{{enumitem}}
@@ -69,18 +91,24 @@ def create_exam(folder_path, file_name, version):
 \\newcommand{{\\question}}[1]{{\\section*{{#1}}}}
 
 \\title{{Module 2: Exam ({version})}}
+\\date{{}}
 
 \\begin{{document}}
 
 \\maketitle
 
+{exam_instructions}
+
+\\newpage
+{{\\large
 {exam_questions}
 \\end{{document}}
+}}
 """
+
     # Save the exam file
     with open(os.path.join(folder_path, file_name), 'w') as file:
         file.write(exam_content)
-
 
 def remove_correct_tags(file_path, new_file_path):
     """Remove all occurrences of '[correct]' from a LaTeX file."""
