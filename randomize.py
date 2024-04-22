@@ -50,12 +50,15 @@ def create_exam(folder_path, file_name, version):
             exam_questions += randomized_content + '\n\n'
     
     exam_content = f"""\\documentclass{{article}}
+\\usepackage[margin=1in]{{geometry}}  % Adjust margin here
 \\usepackage{{enumitem}}
 \\usepackage{{xifthen}}
 \\usepackage{{xcolor}}
+\\usepackage{{titlesec}}
+\\titleformat*{{\\section}}{{\\normalfont\\large\\bfseries}}  % Customize section titles
 
 \\newlist{{answers}}{{enumerate}}{{1}}
-\\setlist[answers]{{label=\\alph*.)}}
+\\setlist[answers]{{label=\\arabic*.}}  % Change from \\alph*.) to \\arabic*.)
 
 \\newcommand{{\\answer}}[2][]{{%
     \\ifthenelse{{\\equal{{#1}}{{correct}}}}
@@ -77,6 +80,7 @@ def create_exam(folder_path, file_name, version):
     # Save the exam file
     with open(os.path.join(folder_path, file_name), 'w') as file:
         file.write(exam_content)
+
 
 def remove_correct_tags(file_path, new_file_path):
     """Remove all occurrences of '[correct]' from a LaTeX file."""
